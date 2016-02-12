@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="dogethercamera__red">#F0001D</color>
+    <color name="dogethercamera__pressed_red">#B3F0001D</color>
+    <color name="dogethercamera__white">#FFFFFF</color>
+    <color name="dogethercamera__pressed_white">#99FFFFFF</color>
+</resources>

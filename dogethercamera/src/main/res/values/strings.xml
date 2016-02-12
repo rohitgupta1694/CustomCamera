@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="dogethercamera__app_name">dogetherCamera</string>
+    <string name="dogethercamera__action_settings">Settings</string>
+    <string name="dogethercamera__start_image_capture">Take New Picture!</string>
+    <string name="dogethercamera__capture_image">Snap It!</string>
+    <string name="dogethercamera__save_image">Save</string>
+    <string name="dogethercamera__cancel">Cancel</string>
+    <string name="dogethercamera__swap_camera">Swap</string>
+    <string name="dogethercamera__flash">Flash</string>
+    <string name="dogethercamera__auto_flash">Auto Flash</string>
+    <string name="dogethercamera__no_flash">No Flash</string>
+    <string name="dogethercamera__recapture_image">Retake Picture</string>
+    <string name="dogethercamera__capturing_image">Taking New Picture</string>
+    <string name="dogethercamera__done">Done</string>
+    <string name="dogethercamera__request_write_storage_permission_text">Approval is needed to save your photo on your device</string>
+</resources>
