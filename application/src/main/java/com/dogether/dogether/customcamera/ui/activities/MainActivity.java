@@ -1,4 +1,4 @@
-package com.dogether.dogether.customcamera;
+package com.dogether.dogether.customcamera.ui.activities;
 
 import android.Manifest;
 import android.content.DialogInterface;
@@ -13,21 +13,33 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
+import com.dogether.dogether.customcamera.R;
+import com.dogether.dogether.customcamera.utils.Constants;
+import com.dogether.dogether.customcamera.utils.Util;
 import com.dogether.dogether.dogethercamera.CameraActivity;
 import com.dogether.dogether.dogethercamera.ImageUtility;
+
+import java.io.File;
 
 /**
  * Created by dogether on 12/2/16.
  */
 public class MainActivity extends AppCompatActivity {
 
+    private static final String TAG = MainActivity.class.getSimpleName();
     private static final int REQUEST_CAMERA = 0;
     private static final int REQUEST_CAMERA_PERMISSION = 1;
     private Point mSize;
+    private TransferUtility mTransferUtility;
+    private TransferObserver mTransferObserver;
+    private File mImageLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,11 +57,18 @@ public class MainActivity extends AppCompatActivity {
 
         if (requestCode == REQUEST_CAMERA) {
             Uri photoUri = data.getData();
+            mImageLocation = new File(photoUri.getPath());
             // Get the bitmap in according to the width of the device
-            Bitmap bitmap = ImageUtility.decodeSampledBitmapFromPath(photoUri.getPath(), mSize.x, mSize.x);
+             Bitmap bitmap = ImageUtility.decodeSampledBitmapFromPath(photoUri.getPath(), mSize.x, mSize.x);
+            Log.d("Bitmap",mImageLocation+"");
             ((ImageView) findViewById(R.id.image)).setImageBitmap(bitmap);
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public void uploadImageToServer(View view){
+        mTransferUtility = Util.getTransferUtility(this);
+        mTransferObserver = mTransferUtility.upload(Constants.BUCKET_NAME,TAG,mImageLocation);
     }
 
     public void requestForCameraPermission(View view) {
