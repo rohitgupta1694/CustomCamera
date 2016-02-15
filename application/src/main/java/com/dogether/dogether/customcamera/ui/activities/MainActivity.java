@@ -33,7 +33,7 @@ import java.io.File;
  */
 public class MainActivity extends AppCompatActivity {
 
-    private static final String TAG = MainActivity.class.getSimpleName();
+    public static String TAG;
     private static final int REQUEST_CAMERA = 0;
     private static final int REQUEST_CAMERA_PERMISSION = 1;
     private Point mSize;
@@ -60,7 +60,6 @@ public class MainActivity extends AppCompatActivity {
             mImageLocation = new File(photoUri.getPath());
             // Get the bitmap in according to the width of the device
              Bitmap bitmap = ImageUtility.decodeSampledBitmapFromPath(photoUri.getPath(), mSize.x, mSize.x);
-            Log.d("Bitmap",mImageLocation+"");
             ((ImageView) findViewById(R.id.image)).setImageBitmap(bitmap);
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -68,7 +67,14 @@ public class MainActivity extends AppCompatActivity {
 
     public void uploadImageToServer(View view){
         mTransferUtility = Util.getTransferUtility(this);
-        mTransferObserver = mTransferUtility.upload(Constants.BUCKET_NAME,TAG,mImageLocation);
+        String fileName = mImageLocation.toString().trim().
+                substring(mImageLocation.toString().trim().lastIndexOf('/')+1);
+        TAG = fileName;
+        Log.d("Bucket TAG",TAG);
+        Log.d("Bucket FileName",fileName);
+        mTransferObserver = mTransferUtility.upload(Constants.BUCKET_NAME,fileName,mImageLocation);
+        Log.d("Bucket",mTransferObserver.getAbsoluteFilePath());
+        Log.d("Bucket URL",Util.getBucketURL()+"");
     }
 
     public void requestForCameraPermission(View view) {

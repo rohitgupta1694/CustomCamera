@@ -1,12 +1,16 @@
 package com.dogether.dogether.customcamera.utils;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.regions.Region;
+import com.dogether.dogether.customcamera.ui.activities.MainActivity;
+
+import java.net.URL;
 
 /**
  * Created by dogether on 15/2/16.
@@ -45,6 +49,10 @@ public class Util {
         }
 
         return sTransferUtility;
+    }
+
+    public static URL getBucketURL(){
+        return(sS3Client.getUrl(Constants.BUCKET_NAME, MainActivity.TAG));
     }
 
     public static String getBytesString(long bytes) {
