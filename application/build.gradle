@@ -24,4 +24,8 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile project(':dogethercamera')
+    compile 'com.amazonaws:aws-android-sdk-core:2.2.12'
+    compile 'com.amazonaws:aws-android-sdk-cognito:2.2.12'
+    compile 'com.amazonaws:aws-android-sdk-s3:2.2.12'
+    compile 'com.amazonaws:aws-android-sdk-ddb:2.2.12'
 }
