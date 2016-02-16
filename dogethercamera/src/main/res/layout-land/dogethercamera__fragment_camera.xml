@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.dogether.dogether.dogethercamera.SquareCameraPreview
+    <com.dogether.dogether.dogethercamera.Camera.SquareCameraPreview
         android:id="@+id/camera_preview_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

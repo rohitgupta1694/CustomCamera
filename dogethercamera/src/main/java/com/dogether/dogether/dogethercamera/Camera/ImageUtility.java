@@ -1,4 +1,4 @@
-package com.dogether.dogether.dogethercamera;
+package com.dogether.dogether.dogethercamera.Camera;
 
 import android.content.Context;
 import android.content.Intent;

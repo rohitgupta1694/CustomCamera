@@ -3,14 +3,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/black"
-    tools:context="com.dogether.dogether.dogethercamera.EditSavePhotoFragment">
+    tools:context=".Camera.EditSavePhotoFragment">
 
     <View
         android:id="@+id/topView"
         android:layout_width="match_parent"
         android:layout_height="0dp"/>
 
-    <com.dogether.dogether.dogethercamera.SquareImageView
+    <com.dogether.dogether.dogethercamera.Camera.SquareImageView
         android:id="@+id/photo"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

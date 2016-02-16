@@ -1,10 +1,12 @@
-package com.dogether.dogether.dogethercamera;
+package com.dogether.dogether.dogethercamera.Camera;
 
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+
+import com.dogether.dogether.dogethercamera.R;
 
 /**
  * Created by dogether on 12/2/16.

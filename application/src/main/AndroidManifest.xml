@@ -7,6 +7,7 @@
 
     <!-- Request permission to use a device camera -->
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
 
     <uses-feature android:name="android.hardware.camera2" />
 
@@ -34,7 +35,9 @@
             android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService"
             android:enabled="true" />
 
-        <activity android:name="com.dogether.dogether.dogethercamera.CameraActivity" />
+        <activity android:name="com.dogether.dogether.dogethercamera.Camera.CameraActivity" />
+
+        <activity android:name="com.dogether.dogether.dogethercamera.VideoRecorder.ui.activities.VideoRecorderActivity" />
 
     </application>
 
