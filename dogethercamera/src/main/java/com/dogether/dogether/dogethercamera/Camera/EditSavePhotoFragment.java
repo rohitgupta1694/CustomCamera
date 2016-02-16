@@ -1,4 +1,4 @@
-package com.dogether.dogether.dogethercamera;
+package com.dogether.dogether.dogethercamera.Camera;
 
 import android.Manifest;
 import android.app.Activity;
@@ -16,6 +16,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+
+import com.dogether.dogether.dogethercamera.R;
+import com.dogether.dogether.dogethercamera.RuntimePermissionActivity;
 
 /**
  * Created by dogether on 12/2/16.

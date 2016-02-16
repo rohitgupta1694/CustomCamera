@@ -11,7 +11,7 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"/>
 
-    <com.dogether.dogether.dogethercamera.SquareImageView
+    <com.dogether.dogether.dogethercamera.Camera.SquareImageView
         android:id="@+id/photo"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

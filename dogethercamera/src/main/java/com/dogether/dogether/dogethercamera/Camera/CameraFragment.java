@@ -1,4 +1,4 @@
-package com.dogether.dogether.dogethercamera;
+package com.dogether.dogether.dogethercamera.Camera;
 
 import android.app.Activity;
 import android.content.Context;
@@ -23,6 +23,8 @@ import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.dogether.dogether.dogethercamera.R;
 
 import java.io.IOException;
 import java.util.List;

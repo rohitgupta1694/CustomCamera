@@ -23,29 +23,31 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.dogether.dogether.customcamera.R;
 import com.dogether.dogether.customcamera.utils.Constants;
 import com.dogether.dogether.customcamera.utils.Util;
-import com.dogether.dogether.dogethercamera.CameraActivity;
-import com.dogether.dogether.dogethercamera.ImageUtility;
+import com.dogether.dogether.dogethercamera.Camera.CameraActivity;
+import com.dogether.dogether.dogethercamera.Camera.ImageUtility;
+import com.dogether.dogether.dogethercamera.VideoRecorder.ui.activities.VideoRecorderActivity;
 
 import java.io.File;
 
 /**
  * Created by dogether on 12/2/16.
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity{
 
     public static String TAG;
     private static final int REQUEST_CAMERA = 0;
+    private static final int REQUEST_VIDEO = 0;
     private static final int REQUEST_CAMERA_PERMISSION = 1;
     private Point mSize;
     private TransferUtility mTransferUtility;
     private TransferObserver mTransferObserver;
     private File mImageLocation;
+    private View mView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         Display display = getWindowManager().getDefaultDisplay();
         mSize = new Point();
         display.getSize(mSize);
@@ -62,10 +64,13 @@ public class MainActivity extends AppCompatActivity {
              Bitmap bitmap = ImageUtility.decodeSampledBitmapFromPath(photoUri.getPath(), mSize.x, mSize.x);
             ((ImageView) findViewById(R.id.image)).setImageBitmap(bitmap);
         }
+        else if(requestCode == REQUEST_VIDEO){
+            Log.d("VideoRecorder","Video Saved");
+        }
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    public void uploadImageToServer(View view){
+    public void uploadImageToServer(){
         mTransferUtility = Util.getTransferUtility(this);
         String fileName = mImageLocation.toString().trim().
                 substring(mImageLocation.toString().trim().lastIndexOf('/')+1);
@@ -78,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void requestForCameraPermission(View view) {
+        mView = view;
         final String permission = Manifest.permission.CAMERA;
         if (ContextCompat.checkSelfPermission(MainActivity.this, permission)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -115,8 +121,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void launch() {
-        Intent startCustomCameraIntent = new Intent(this, CameraActivity.class);
-        startActivityForResult(startCustomCameraIntent, REQUEST_CAMERA);
+        switch(mView.getId()){
+            case R.id.launch_camera:
+                Intent startCustomCameraIntent = new Intent(this, CameraActivity.class);
+                startActivityForResult(startCustomCameraIntent, REQUEST_CAMERA);
+                break;
+            case R.id.launch_video:
+                Intent startCustomVideoRecorderIntent = new Intent(this, VideoRecorderActivity.class);
+                startActivityForResult(startCustomVideoRecorderIntent, REQUEST_VIDEO);
+                break;
+        }
+
     }
 
     @Override
@@ -135,4 +150,5 @@ public class MainActivity extends AppCompatActivity {
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
+
 }
