@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -77,7 +78,7 @@ public class EditSavePhotoFragment extends Fragment {
             topView.getLayoutParams().width = imageParameters.mCoverWidth;
         }
 
-        rotatePicture(rotation, data, photoImageView);
+        photoImageView.setImageBitmap(ImageUtility.rotatePicture(getActivity(), rotation, data));
 
         view.findViewById(R.id.save_photo).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,25 +86,6 @@ public class EditSavePhotoFragment extends Fragment {
                 savePicture();
             }
         });
-    }
-
-    private void rotatePicture(int rotation, byte[] data, ImageView photoImageView) {
-        Bitmap bitmap = ImageUtility.decodeSampledBitmapFromByte(getActivity(), data);
-//        Log.d(TAG, "original bitmap width " + bitmap.getWidth() + " height " + bitmap.getHeight());
-        if (rotation != 0) {
-            Bitmap oldBitmap = bitmap;
-
-            Matrix matrix = new Matrix();
-            matrix.postRotate(rotation);
-
-            bitmap = Bitmap.createBitmap(
-                    oldBitmap, 0, 0, oldBitmap.getWidth(), oldBitmap.getHeight(), matrix, false
-            );
-
-            oldBitmap.recycle();
-        }
-
-        photoImageView.setImageBitmap(bitmap);
     }
 
     private void savePicture() {

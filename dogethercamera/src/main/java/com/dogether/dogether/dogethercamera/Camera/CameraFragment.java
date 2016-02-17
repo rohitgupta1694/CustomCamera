@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.hardware.Camera;
 import android.hardware.SensorManager;
 import android.net.Uri;
@@ -22,6 +23,8 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.dogether.dogether.dogethercamera.R;
@@ -39,13 +42,11 @@ public class CameraFragment extends Fragment implements SurfaceHolder.Callback, 
     public static final String CAMERA_FLASH_KEY = "flash_mode";
     public static final String IMAGE_INFO = "image_info";
 
-    private static final int PICTURE_SIZE_MAX_WIDTH = 1280;
-    private static final int PREVIEW_SIZE_MAX_WIDTH = 640;
-
     private int mCameraID;
     private String mFlashMode;
     private Camera mCamera;
     private SquareCameraPreview mPreviewView;
+    private RelativeLayout mCameraView;
     private SurfaceHolder mSurfaceHolder;
 
     private boolean mIsSafeToTakePhoto = false;
@@ -92,6 +93,7 @@ public class CameraFragment extends Fragment implements SurfaceHolder.Callback, 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        mCameraView = (RelativeLayout) view.findViewById(R.id.cameraView);
         mOrientationListener.enable();
 
         mPreviewView = (SquareCameraPreview) view.findViewById(R.id.camera_preview_view);
@@ -108,11 +110,21 @@ public class CameraFragment extends Fragment implements SurfaceHolder.Callback, 
             observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                 @Override
                 public void onGlobalLayout() {
-                    mImageParameters.mPreviewWidth = mPreviewView.getWidth();
-                    mImageParameters.mPreviewHeight = mPreviewView.getHeight();
+//                    RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams)mCameraView.getLayoutParams();
+                    mImageParameters.mPreviewWidth = mPreviewView.getViewWidth();
+                    mImageParameters.mPreviewHeight = mPreviewView.getViewHeight();
 
                     mImageParameters.mCoverWidth = mImageParameters.mCoverHeight
                             = mImageParameters.calculateCoverWidthHeight();
+
+//                    layoutParams.width = mPreviewView.getViewWidth();
+//                    layoutParams.height = mPreviewView.getViewHeight();
+//                    mCameraView.setLayoutParams(layoutParams);
+                    Log.d(TAG, mPreviewView.getViewWidth() + "");
+                    Log.d(TAG, mPreviewView.getViewHeight() + "");
+                   /* Log.d(TAG, mCameraView.getWidth() + "");
+                    Log.d(TAG, mCameraView.getHeight() + "");*/
+
 
 //                    Log.d(TAG, "parameters: " + mImageParameters.getStringValues());
 //                    Log.d(TAG, "cover height " + topCoverView.getHeight());
@@ -129,11 +141,16 @@ public class CameraFragment extends Fragment implements SurfaceHolder.Callback, 
             if (mImageParameters.isPortrait()) {
                 topCoverView.getLayoutParams().height = mImageParameters.mCoverHeight;
                 btnCoverView.getLayoutParams().height = mImageParameters.mCoverHeight;
+                Log.d(TAG,"Top & Bottom Cover Height: " + mImageParameters.mCoverHeight+"");
             } else {
                 topCoverView.getLayoutParams().width = mImageParameters.mCoverWidth;
                 btnCoverView.getLayoutParams().width = mImageParameters.mCoverWidth;
+                Log.d(TAG,"Top & Bottom Cover Width: " + mImageParameters.mCoverHeight+"");
+
             }
         }
+
+
 
         final ImageView swapCameraBtn = (ImageView) view.findViewById(R.id.change_camera);
         swapCameraBtn.setOnClickListener(new View.OnClickListener() {
@@ -360,30 +377,27 @@ public class CameraFragment extends Fragment implements SurfaceHolder.Callback, 
     }
 
     private Camera.Size determineBestPreviewSize(Camera.Parameters parameters) {
-        return determineBestSize(parameters.getSupportedPreviewSizes(), PREVIEW_SIZE_MAX_WIDTH);
+        return determineBestSize(parameters.getSupportedPreviewSizes());
     }
 
     private Camera.Size determineBestPictureSize(Camera.Parameters parameters) {
-        return determineBestSize(parameters.getSupportedPictureSizes(), PICTURE_SIZE_MAX_WIDTH);
+        return determineBestSize(parameters.getSupportedPictureSizes());
     }
 
-    private Camera.Size determineBestSize(List<Camera.Size> sizes, int widthThreshold) {
+    private Camera.Size determineBestSize(List<Camera.Size> sizes) {
         Camera.Size bestSize = null;
         Camera.Size size;
         int numOfSizes = sizes.size();
+        bestSize = sizes.get(0);
         for (int i = 0; i < numOfSizes; i++) {
-            size = sizes.get(i);
-            boolean isDesireRatio = (size.width / 4) == (size.height / 3);
-            boolean isBetterSize = (bestSize == null) || size.width > bestSize.width;
-
-            if (isDesireRatio && isBetterSize) {
-                bestSize = size;
+            if ((sizes.get(i).width * sizes.get(i).height) > (bestSize.width * bestSize.height)) {
+                bestSize = sizes.get(i);
             }
         }
 
         if (bestSize == null) {
             Log.d(TAG, "cannot find the best camera size");
-            return sizes.get(sizes.size() - 1);
+            return sizes.get(0);
         }
 
         return bestSize;

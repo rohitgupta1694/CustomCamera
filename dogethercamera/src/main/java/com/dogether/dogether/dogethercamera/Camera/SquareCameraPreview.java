@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Rect;
 import android.hardware.Camera;
+import android.nfc.Tag;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -78,7 +79,8 @@ public class SquareCameraPreview extends SurfaceView {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int height = MeasureSpec.getSize(heightMeasureSpec);
         int width = MeasureSpec.getSize(widthMeasureSpec);
-
+        Log.d(TAG,"Width: " + width+"");
+        Log.d(TAG,"Height: " + height+"");
         final boolean isPortrait =
                 getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
 
@@ -87,6 +89,7 @@ public class SquareCameraPreview extends SurfaceView {
                 width = (int) (height * ASPECT_RATIO + 0.5);
             } else {
                 height = (int) (width / ASPECT_RATIO + 0.5);
+                Log.d(TAG,"Height: " + height+"");
             }
         } else {
             if (height > width * ASPECT_RATIO) {
@@ -95,7 +98,6 @@ public class SquareCameraPreview extends SurfaceView {
                 width = (int) (height / ASPECT_RATIO + 0.5);
             }
         }
-
         setMeasuredDimension(width, height);
     }
 
