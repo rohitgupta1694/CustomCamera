@@ -33,7 +33,7 @@ public class VideoRecorderFragment extends Fragment implements View.OnClickListe
     /**
      * for scale mode display
      */
-    private TextView mScaleModeView;
+//    private TextView mScaleModeView;
     /**
      * button for start/stop recording
      */
@@ -57,8 +57,8 @@ public class VideoRecorderFragment extends Fragment implements View.OnClickListe
         mCameraView = (CameraGLView)rootView.findViewById(R.id.cameraView);
         mCameraView.setVideoSize(1280, 720);
         mCameraView.setOnClickListener(this);
-        mScaleModeView = (TextView)rootView.findViewById(R.id.scalemode_textview);
-        updateScaleModeText();
+//        mScaleModeView = (TextView)rootView.findViewById(R.id.scalemode_textview);
+//        updateScaleModeText();
         mRecordButton = (ImageButton)rootView.findViewById(R.id.record_button);
         mRecordButton.setOnClickListener(this);
         return rootView;
@@ -88,7 +88,7 @@ public class VideoRecorderFragment extends Fragment implements View.OnClickListe
         if (i == R.id.cameraView) {
             final int scale_mode = (mCameraView.getScaleMode() + 1) % 4;
             mCameraView.setScaleMode(scale_mode);
-            updateScaleModeText();
+//            updateScaleModeText();
 
         } else if (i == R.id.record_button) {
             if (mMuxer == null)
@@ -98,7 +98,7 @@ public class VideoRecorderFragment extends Fragment implements View.OnClickListe
 
         }
     }
-
+/*
     private void updateScaleModeText() {
         final int scale_mode = mCameraView.getScaleMode();
         mScaleModeView.setText(
@@ -106,7 +106,7 @@ public class VideoRecorderFragment extends Fragment implements View.OnClickListe
                         : (scale_mode == 1 ? "keep aspect(viewport)"
                         : (scale_mode == 2 ? "keep aspect(matrix)"
                         : (scale_mode == 3 ? "keep aspect(crop center)" : ""))));
-    }
+    }*/
 
     /**
      * start resorcing
