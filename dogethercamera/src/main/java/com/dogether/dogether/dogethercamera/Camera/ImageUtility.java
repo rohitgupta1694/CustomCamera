@@ -26,6 +26,7 @@ import java.util.Date;
  * Created by dogether on 12/2/16.
  */
 public class ImageUtility {
+    private static final String TAG = ImageUtility.class.getSimpleName();
 
     public static String convertBitmapToString(Bitmap bitmap) {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -59,9 +60,11 @@ public class ImageUtility {
 
     public static Uri savePicture(Context context, Bitmap bitmap) {
         int cropHeight;
-        if (bitmap.getHeight() > bitmap.getWidth()) cropHeight = bitmap.getWidth();
-        else                                        cropHeight = bitmap.getHeight();
-
+        if (bitmap.getHeight() < bitmap.getWidth())
+            cropHeight = bitmap.getHeight();
+        else
+            cropHeight = bitmap.getWidth();
+        Log.d(TAG , "Bitmap Height: " + cropHeight);
         bitmap = ThumbnailUtils.extractThumbnail(bitmap, cropHeight, cropHeight, ThumbnailUtils.OPTIONS_RECYCLE_INPUT);
 
         final File mediaStorageDir = new File(Environment.getExternalStorageDirectory() + "/"+ "Dogether","Images");
@@ -100,13 +103,13 @@ public class ImageUtility {
         return fileContentUri;
     }
 
-    public static Bitmap decodeSampledBitmapFromPath(String path, int reqWidth, int reqHeight) {
+    public static Bitmap decodeSampledBitmapFromPath(String path, int reqWidth) {
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         options.inMutable = true;
         options.inBitmap = BitmapFactory.decodeFile(path, options);
 
-        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+        options.inSampleSize = 1;
 
         options.inScaled = true;
         options.inDensity = options.outWidth;
@@ -114,7 +117,7 @@ public class ImageUtility {
 
         options.inJustDecodeBounds = false;
         options.inPurgeable = true;
-        options.inInputShareable = true;
+//        options.inInputShareable = true;
 
         return BitmapFactory.decodeFile(path, options);
     }
@@ -140,10 +143,10 @@ public class ImageUtility {
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         options.inMutable = true;
-        options.inBitmap = BitmapFactory.decodeByteArray(bitmapBytes, 0, bitmapBytes.length, options);
+
 
         // Calculate inSampleSize
-        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+        options.inSampleSize = 1;
 
         // Load & resize the image to be 1/inSampleSize dimensions
         // Use when you do not want to scale the image with a inSampleSize that is a power of 2
@@ -154,7 +157,8 @@ public class ImageUtility {
         // Decode bitmap with inSampleSize set
         options.inJustDecodeBounds = false; // If set to true, the decoder will return null (no bitmap), but the out... fields will still be set, allowing the caller to query the bitmap without having to allocate the memory for its pixels.
         options.inPurgeable = true;         // Tell to gc that whether it needs free memory, the Bitmap can be cleared
-        options.inInputShareable = true;    // Which kind of reference will be used to recover the Bitmap data after being clear, when it will be used in the future
+//        options.inInputShareable = true     // Which kind of reference will be used to recover the Bitmap data after being clear, when it will be used in the future
+
 
         return BitmapFactory.decodeByteArray(bitmapBytes, 0, bitmapBytes.length, options);
     }
@@ -169,7 +173,7 @@ public class ImageUtility {
      * of 8 because BitmapFactory only honors sample size this way.
      * For example, BitmapFactory downsamples an image by 2 even though the
      * request is 3. So we round up the sample size to avoid OOM.
-     */
+     *//*
     public static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
         int initialInSampleSize = computeInitialSampleSize(options, reqWidth, reqHeight);
 
@@ -213,6 +217,6 @@ public class ImageUtility {
         } else {
             return upperBound;
         }
-    }
+    }*/
 
 }

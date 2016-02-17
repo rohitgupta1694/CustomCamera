@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity{
             Uri photoUri = data.getData();
             mImageLocation = new File(photoUri.getPath());
             // Get the bitmap in according to the width of the device
-             Bitmap bitmap = ImageUtility.decodeSampledBitmapFromPath(photoUri.getPath(), mSize.x, mSize.x);
+             Bitmap bitmap = ImageUtility.decodeSampledBitmapFromPath(photoUri.getPath(), mSize.x);
             ((ImageView) findViewById(R.id.image)).setImageBitmap(bitmap);
         }
         else if(requestCode == REQUEST_VIDEO){

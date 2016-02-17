@@ -1,6 +1,7 @@
 package com.dogether.dogether.dogethercamera.Camera;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
@@ -9,7 +10,7 @@ import android.view.animation.Transformation;
  * Created by dogether on 12/2/16.
  */
 public class ResizeAnimation extends Animation {
-//    public static final String TAG = ResizeAnimation.class.getSimpleName();
+    public static final String TAG = ResizeAnimation.class.getSimpleName();
 
     final int mStartLength;
     final int mFinalLength;
@@ -21,19 +22,18 @@ public class ResizeAnimation extends Animation {
         mView = view;
         mStartLength = mIsPortrait ? mView.getHeight() : mView.getWidth();
         mFinalLength = imageParameters.getAnimationParameter();
-//        Log.d(TAG, "Start: " + mStartLength + " final: " + mFinalLength);
     }
 
     @Override
     protected void applyTransformation(float interpolatedTime, Transformation t) {
+        Log.d(TAG, "Start: " + mStartLength + " final: " + mFinalLength + " InterpolatedTime: " + interpolatedTime);
         int newLength = (int) (mStartLength + (mFinalLength - mStartLength) * interpolatedTime);
-
+        Log.d(TAG, "New Length: " + newLength);
         if (mIsPortrait) {
-            mView.getLayoutParams().height = newLength;
+            mView.getLayoutParams().height = newLength - 24;
         } else {
-            mView.getLayoutParams().width = newLength;
+            mView.getLayoutParams().width = newLength - 24;
         }
-
         mView.requestLayout();
     }
 

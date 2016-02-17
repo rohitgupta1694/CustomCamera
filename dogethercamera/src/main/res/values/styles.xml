@@ -11,6 +11,11 @@
         <item name="android:windowActionBar">false</item>
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowContentOverlay">@null</item>
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="colorPrimary">@color/dogethercamera__colorPrimary</item>
+        <item name="colorPrimaryDark">@color/dogethercamera__colorPrimaryDark</item>
+        <item name="colorAccent">@color/dogethercamera__colorAccent</item>
     </style>
 
     <style name="dogethercamera__CameraFullScreenTheme.AppBarOverlay"
