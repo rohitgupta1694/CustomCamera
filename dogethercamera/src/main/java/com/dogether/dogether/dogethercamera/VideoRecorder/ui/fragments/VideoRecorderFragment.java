@@ -1,14 +1,19 @@
 package com.dogether.dogether.dogethercamera.VideoRecorder.ui.fragments;
 
+import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageButton;
-import android.widget.TextView;
 
+import com.dogether.dogether.dogethercamera.ImageParameters;
+import com.dogether.dogether.dogethercamera.ResizeAnimation;
 import com.dogether.dogether.dogethercamera.R;
 import com.dogether.dogether.dogethercamera.VideoRecorder.utils.CameraGLView;
 import com.dogether.dogether.dogethercamera.VideoRecorder.utils.encoder.MediaAudioEncoder;
@@ -21,7 +26,7 @@ import java.io.IOException;
 /**
  * Created by dogether on 16/2/16.
  */
-public class VideoRecorderFragment extends Fragment implements View.OnClickListener {
+public class VideoRecorderFragment extends Fragment implements View.OnClickListener{
 
     private static final boolean DEBUG = false;	// TODO set false on release
     public static final String TAG = "VideoRecorderFragment";
@@ -43,6 +48,9 @@ public class VideoRecorderFragment extends Fragment implements View.OnClickListe
      */
     private MediaMuxerWrapper mMuxer;
 
+
+    private ImageParameters mImageParameters;
+
     public static Fragment newInstance() {
         return new VideoRecorderFragment();
     }
@@ -54,14 +62,71 @@ public class VideoRecorderFragment extends Fragment implements View.OnClickListe
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.dogethercamera__fragment_main, container, false);
-        mCameraView = (CameraGLView)rootView.findViewById(R.id.cameraView);
+        if (savedInstanceState == null) {
+            mImageParameters = new ImageParameters();
+        }
+        return rootView;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        mCameraView = (CameraGLView)view.findViewById(R.id.cameraView);
         mCameraView.setVideoSize(1280, 720);
         mCameraView.setOnClickListener(this);
 //        mScaleModeView = (TextView)rootView.findViewById(R.id.scalemode_textview);
 //        updateScaleModeText();
-        mRecordButton = (ImageButton)rootView.findViewById(R.id.record_button);
+        mRecordButton = (ImageButton)view.findViewById(R.id.record_button);
         mRecordButton.setOnClickListener(this);
-        return rootView;
+        final View topCoverView = view.findViewById(R.id.top_cover_view);
+        final View btnCoverView = view.findViewById(R.id.bottom_cover_view);
+        mImageParameters.mIsPortrait =
+                getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
+        if (savedInstanceState == null) {
+            ViewTreeObserver observer = mCameraView.getViewTreeObserver();
+            observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+//                    RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams)mCameraView.getLayoutParams();
+                    mImageParameters.mPreviewWidth = mCameraView.getViewWidth();
+                    mImageParameters.mPreviewHeight = mCameraView.getViewHeight();
+
+                    mImageParameters.mCoverWidth = mImageParameters.mCoverHeight
+                            = mImageParameters.calculateCoverWidthHeight();
+
+//                    layoutParams.width = mCameraView.getViewWidth();
+//                    layoutParams.height = mCameraView.getViewHeight();
+//                    mCameraView.setLayoutParams(layoutParams);
+                    Log.d(TAG, mCameraView.getViewWidth() + "");
+                    Log.d(TAG, mCameraView.getViewHeight() + "");
+                   /* Log.d(TAG, mCameraView.getWidth() + "");
+                    Log.d(TAG, mCameraView.getHeight() + "");*/
+
+
+//                    Log.d(TAG, "parameters: " + mImageParameters.getStringValues());
+//                    Log.d(TAG, "cover height " + topCoverView.getHeight());
+                    resizeTopAndBtmCover(topCoverView, btnCoverView);
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                        mCameraView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    } else {
+                        mCameraView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                    }
+                }
+            });
+        } else {
+            if (mImageParameters.isPortrait()) {
+                topCoverView.getLayoutParams().height = mImageParameters.mCoverHeight;
+                btnCoverView.getLayoutParams().height = mImageParameters.mCoverHeight;
+                Log.d(TAG,"Top & Bottom Cover Height: " + mImageParameters.mCoverHeight+"");
+            } else {
+                topCoverView.getLayoutParams().width = mImageParameters.mCoverWidth;
+                btnCoverView.getLayoutParams().width = mImageParameters.mCoverWidth;
+                Log.d(TAG,"Top & Bottom Cover Width: " + mImageParameters.mCoverHeight+"");
+
+            }
+        }
     }
 
     @Override
@@ -77,6 +142,20 @@ public class VideoRecorderFragment extends Fragment implements View.OnClickListe
         stopRecording();
         mCameraView.onPause();
         super.onPause();
+    }
+
+    private void resizeTopAndBtmCover( final View topCover, final View bottomCover) {
+        ResizeAnimation resizeTopAnimation
+                = new ResizeAnimation(topCover, mImageParameters);
+        resizeTopAnimation.setDuration(800);
+        resizeTopAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
+        topCover.startAnimation(resizeTopAnimation);
+
+        ResizeAnimation resizeBtmAnimation
+                = new ResizeAnimation(bottomCover, mImageParameters);
+        resizeBtmAnimation.setDuration(800);
+        resizeBtmAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
+        bottomCover.startAnimation(resizeBtmAnimation);
     }
 
     /**
@@ -166,5 +245,23 @@ public class VideoRecorderFragment extends Fragment implements View.OnClickListe
                 mCameraView.setVideoEncoder(null);
         }
     };
+
+/*    @Override
+    public void surfaceCreated(SurfaceHolder holder) {
+        mSurfaceHolder = holder;
+
+        getCamera(mCameraID);
+        startCameraPreview();
+    }
+
+    @Override
+    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+
+    }
+
+    @Override
+    public void surfaceDestroyed(SurfaceHolder holder) {
+        // The surface is destroyed with the visibility of the SurfaceView is set to View.Invisible
+    }*/
 
 }

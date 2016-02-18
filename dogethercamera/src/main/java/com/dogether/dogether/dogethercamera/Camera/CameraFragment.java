@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
 import android.hardware.Camera;
 import android.hardware.SensorManager;
 import android.net.Uri;
@@ -23,11 +22,12 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.dogether.dogether.dogethercamera.ImageParameters;
 import com.dogether.dogether.dogethercamera.R;
+import com.dogether.dogether.dogethercamera.ResizeAnimation;
 
 import java.io.IOException;
 import java.util.List;
