@@ -1,4 +1,4 @@
-package com.dogether.dogether.dogethercamera.Camera;
+package com.dogether.dogether.dogethercamera;
 
 import android.support.annotation.NonNull;
 import android.util.Log;

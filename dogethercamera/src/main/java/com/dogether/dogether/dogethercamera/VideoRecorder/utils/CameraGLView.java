@@ -1,6 +1,7 @@
 package com.dogether.dogether.dogethercamera.VideoRecorder.utils;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.opengl.EGL14;
@@ -43,6 +44,7 @@ public class CameraGLView extends GLSurfaceView {
     private static final int SCALE_KEEP_ASPECT = 2;
     private static final int SCALE_CROP_CENTER = 3;
 
+    private static final double ASPECT_RATIO = 3.0 / 4.0;
     private final CameraSurfaceRenderer mRenderer;
     private boolean mHasSurface;
     private CameraHandler mCameraHandler = null;
@@ -89,6 +91,39 @@ public class CameraGLView extends GLSurfaceView {
             mCameraHandler.stopPreview(false);
         }
         super.onPause();
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        int height = MeasureSpec.getSize(heightMeasureSpec);
+        int width = MeasureSpec.getSize(widthMeasureSpec);
+        Log.d(TAG, "Width: " + width + "");
+        Log.d(TAG,"Height: " + height+"");
+        final boolean isPortrait =
+                getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
+
+        if (isPortrait) {
+            if (width > height * ASPECT_RATIO) {
+                width = (int) (height * ASPECT_RATIO + 0.5);
+            } else {
+                height = (int) (width / ASPECT_RATIO + 0.5);
+                Log.d(TAG,"Height: " + height+"");
+            }
+        } else {
+            if (height > width * ASPECT_RATIO) {
+                height = (int) (width * ASPECT_RATIO + 0.5);
+            } else {
+                width = (int) (height / ASPECT_RATIO + 0.5);
+            }
+        }
+        setMeasuredDimension(width, height);
+    }
+    public int getViewWidth() {
+        return getWidth();
+    }
+
+    public int getViewHeight() {
+        return getHeight();
     }
 
     public void setScaleMode(final int mode) {
