@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:local="http://schemas.android.com/apk/res-auto"
-    tools:context="com.dogether.dogether.dogethercamera.VideoRecorder.ui.fragments.VideoRecoderFragment">
+    tools:context=".VideoRecorder.ui.activities.VideoRecorderActivity">
 
     <com.dogether.dogether.dogethercamera.VideoRecorder.utils.CameraGLView
         android:id="@+id/cameraView"
