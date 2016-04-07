@@ -1,17 +1,11 @@
 package com.dogether.dogether.customcamera.ui.activities;
 
 import android.Manifest;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Display;
@@ -25,13 +19,11 @@ import com.dogether.dogether.customcamera.utils.Constants;
 import com.dogether.dogether.customcamera.utils.Util;
 import com.dogether.dogether.dogethercamera.Camera.CameraActivity;
 import com.dogether.dogether.dogethercamera.Camera.ImageUtility;
+import com.dogether.dogether.dogethercamera.RuntimePermissionActivity;
 import com.dogether.dogether.dogethercamera.VideoRecorder.ui.activities.VideoRecorderActivity;
 
 import java.io.File;
 
-/**
- * Created by dogether on 12/2/16.
- */
 public class MainActivity extends AppCompatActivity{
 
     public static String TAG;
@@ -64,8 +56,12 @@ public class MainActivity extends AppCompatActivity{
              Bitmap bitmap = ImageUtility.decodeSampledBitmapFromPath(photoUri.getPath(), mSize.x);
             ((ImageView) findViewById(R.id.image)).setImageBitmap(bitmap);
         }
-        else if(requestCode == REQUEST_VIDEO){
+        if(requestCode == REQUEST_VIDEO){
             Log.d("VideoRecorder","Video Saved");
+        }
+
+        if(requestCode == REQUEST_CAMERA_PERMISSION){
+            launch();
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -84,20 +80,10 @@ public class MainActivity extends AppCompatActivity{
 
     public void requestForCameraPermission(View view) {
         mView = view;
-        final String permission = Manifest.permission.CAMERA;
-        if (ContextCompat.checkSelfPermission(MainActivity.this, permission)
-                != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, permission)) {
-                showPermissionRationaleDialog("Test", permission);
-            } else {
-                requestForPermission(permission);
-            }
-        } else {
-            launch();
-        }
+        RuntimePermissionActivity.startPermissionActivity(MainActivity.this,REQUEST_CAMERA_PERMISSION,Manifest.permission.CAMERA);
     }
 
-    private void showPermissionRationaleDialog(final String message, final String permission) {
+    /*private void showPermissionRationaleDialog(final String message, final String permission) {
         new AlertDialog.Builder(MainActivity.this)
                 .setMessage(message)
                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
@@ -118,7 +104,7 @@ public class MainActivity extends AppCompatActivity{
 
     private void requestForPermission(final String permission) {
         ActivityCompat.requestPermissions(MainActivity.this, new String[]{permission}, REQUEST_CAMERA_PERMISSION);
-    }
+    }*/
 
     private void launch() {
         switch(mView.getId()){
@@ -134,7 +120,7 @@ public class MainActivity extends AppCompatActivity{
 
     }
 
-    @Override
+/*    @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case REQUEST_CAMERA_PERMISSION:
@@ -149,6 +135,6 @@ public class MainActivity extends AppCompatActivity{
             default:
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
-    }
+    }*/
 
 }

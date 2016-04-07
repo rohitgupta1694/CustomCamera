@@ -41,6 +41,24 @@ public class RuntimePermissionActivity extends AppCompatActivity {
         fragment.startActivityForResult(intent, requestCode);
     }
 
+    public static void startPermissionActivity(@NonNull final Activity activity,
+                                     final int requestCode,
+                                     @NonNull final String requestedPermission,
+                                     final String... permissions) {
+
+        final Intent intent = new Intent(activity, RuntimePermissionActivity.class);
+
+        final int capacity = 1 + (permissions != null ? permissions.length : 0);
+        final ArrayList<String> requestedPermissions = new ArrayList<>(capacity);
+        requestedPermissions.add(requestedPermission);
+        if (permissions != null) {
+            requestedPermissions.addAll(Arrays.asList(permissions));
+        }
+
+        intent.putStringArrayListExtra(REQUESTED_PERMISSION, requestedPermissions);
+        activity.startActivityForResult(intent, requestCode);
+    }
+
     /* https://code.google.com/p/android-developer-preview/issues/detail?id=2353 */
     @Override
     protected void onStart() {
